@@ -1,0 +1,24 @@
+name: cupertino_interactive_keyboard
+description: A new Flutter plugin project.
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: '>=2.17.0 <4.0.0'
+  flutter: '>=3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lint: ^2.1.2
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: CupertinoInteractiveKeyboardPlugin
