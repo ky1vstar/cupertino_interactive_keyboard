@@ -10,8 +10,10 @@ class MethodChannelCupertinoInteractiveKeyboard
   final methodChannel = const MethodChannel('cupertino_interactive_keyboard');
 
   @override
-  Future<bool?> initialize() async {
-    return methodChannel.invokeMethod<bool>('initialize');
+  Future<bool?> initialize({required bool firstTime}) async {
+    return methodChannel.invokeMethod<bool>('initialize', {
+      'firstTime': firstTime,
+    });
   }
 
   @override

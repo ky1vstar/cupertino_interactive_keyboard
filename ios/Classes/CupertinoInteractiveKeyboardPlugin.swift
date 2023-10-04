@@ -2,8 +2,6 @@ import Flutter
 import UIKit
 
 public class CupertinoInteractiveKeyboardPlugin: NSObject, FlutterPlugin {
-  private static let instances = NSMapTable<NSObject, CupertinoInteractiveKeyboardPlugin>.strongToWeakObjects()
-  
   public static func register(with registrar: FlutterPluginRegistrar) {
     _ = KeyboardManager.shared
     swizzleFlutterViewController()
@@ -11,33 +9,37 @@ public class CupertinoInteractiveKeyboardPlugin: NSObject, FlutterPlugin {
     
     let channel = FlutterMethodChannel(name: "cupertino_interactive_keyboard", binaryMessenger: registrar.messenger())
     let instance = CupertinoInteractiveKeyboardPlugin()
-    instances.setObject(instance, forKey: instance.id)
-    registrar.publish(instance.id)
+    registrar.publish(instance)
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
   
   static func instance(for registry: FlutterPluginRegistry) -> CupertinoInteractiveKeyboardPlugin? {
-    registry.valuePublished(byPlugin: "CupertinoInteractiveKeyboardPlugin").flatMap(instances.object(forKey:))
+    registry.valuePublished(byPlugin: "CupertinoInteractiveKeyboardPlugin") as? CupertinoInteractiveKeyboardPlugin
   }
   
-  private let id = NSUUID()
   private let scrollView = CIKScrollView()
   let inputView = CIKInputAccessoryView()
-  private var observer: NSObjectProtocol?
     
   override init() {
     super.init()
-//    observer = NotificationCenter.default.addObserver(forName: nil, object: nil, queue: nil) { notification in
-//      print(notification.name.rawValue)
-//      print(notification.object)
-//      print(notification.userInfo)
-//    }
   }
   
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
     case "initialize":
+      guard
+        let args = call.arguments as? [String: Any],
+        let firstTime = args["firstTime"] as? Bool
+      else {
+        return result(FlutterMethodNotImplemented)
+      }
+      
       DispatchQueue.main.async {
+        if firstTime {
+          self.scrollView.scrollabeRects = [:]
+          self.inputView.inputAccessoryHeights = [:]
+        }
+        
         guard let flutterViewController = self.findFlutterViewController() else {
           return result(false)
         }
@@ -112,6 +114,11 @@ public class CupertinoInteractiveKeyboardPlugin: NSObject, FlutterPlugin {
     default:
       result(FlutterMethodNotImplemented)
     }
+  }
+  
+  public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+    scrollView.scrollabeRects = [:]
+    inputView.inputAccessoryHeights = [:]
   }
   
   private func findFlutterViewController() -> FlutterViewController? {

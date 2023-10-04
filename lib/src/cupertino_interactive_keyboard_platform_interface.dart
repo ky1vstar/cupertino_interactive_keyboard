@@ -25,7 +25,7 @@ abstract class CupertinoInteractiveKeyboardPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<bool?> initialize() {
+  Future<bool?> initialize({required bool firstTime}) {
     throw UnimplementedError('initialize() has not been implemented.');
   }
 

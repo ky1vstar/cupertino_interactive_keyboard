@@ -1,11 +1,11 @@
-import 'dart:io';
-
 import 'package:cupertino_interactive_keyboard/src/cupertino_interactive_keyboard_platform_interface.dart';
+import 'package:cupertino_interactive_keyboard/src/current_route_aware.dart';
 import 'package:cupertino_interactive_keyboard/src/rect_observer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+var _firstTime = true;
 var _nextViewId = 0;
 
 class CupertinoInteractiveKeyboard extends StatelessWidget {
@@ -34,13 +34,16 @@ class IOSCupertinoInteractiveKeyboard extends StatefulWidget {
 }
 
 class _IOSCupertinoInteractiveKeyboardState
-    extends State<IOSCupertinoInteractiveKeyboard> {
+    extends State<IOSCupertinoInteractiveKeyboard> with CurrentRouteAware {
   final _viewId = _nextViewId++;
+  Rect? _latestRect;
 
   @override
   void initState() {
     super.initState();
-    CupertinoInteractiveKeyboardPlatform.instance.initialize();
+    CupertinoInteractiveKeyboardPlatform.instance
+        .initialize(firstTime: _firstTime);
+    _firstTime = false;
   }
 
   @override
@@ -50,19 +53,29 @@ class _IOSCupertinoInteractiveKeyboardState
   }
 
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    print(
-        "keklol ModalRoute.of(context).isActive ${ModalRoute.of(context)?.isActive}");
+  void didChangeRouteCurrentState() {
+    super.didChangeRouteCurrentState();
+    _reportRect();
   }
 
   @override
   Widget build(BuildContext context) {
     return RectObserver(
-      onChange: (rect) => CupertinoInteractiveKeyboardPlatform.instance
-          .setScrollableRect(_viewId, rect),
+      onChange: (rect) {
+        _latestRect = rect;
+        _reportRect();
+      },
       child: widget.child,
     );
+  }
+
+  void _reportRect() {
+    if (!isRouteCurrent) {
+      CupertinoInteractiveKeyboardPlatform.instance
+          .removeScrollableRect(_viewId);
+    } else if (_latestRect != null) {
+      CupertinoInteractiveKeyboardPlatform.instance
+          .setScrollableRect(_viewId, _latestRect!);
+    }
   }
 }

@@ -11,12 +11,14 @@ class SimpleScrollView extends StatelessWidget {
         title: const Text("Simple Scroll View"),
       ),
       body: CupertinoInteractiveKeyboard(
-        child: SingleChildScrollView(
-          child: TextFormField(
-            initialValue: _kSampleText,
-            maxLines: null,
-            keyboardType: TextInputType.multiline,
-          ),
+        child: ListView(
+          children: [
+            TextFormField(
+              initialValue: _kSampleText,
+              maxLines: null,
+              keyboardType: TextInputType.multiline,
+            ),
+          ],
         ),
       ),
     );

@@ -27,8 +27,6 @@ class KeyboardManager {
   }
   
   func adjustKeyboardNotification(_ notification: Notification) -> Notification {
-    print("adjustKeyboardNotification", notification.name, notification.userInfo)
-    
     lazy var maxInputAccessoryHeight = activeInputAccessoryViews.map(\.intrinsicContentSize.height).max() ?? 0
     
     guard

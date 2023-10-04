@@ -1,4 +1,5 @@
 import 'package:cupertino_interactive_keyboard/cupertino_interactive_keyboard_platform_interface.dart';
+import 'package:cupertino_interactive_keyboard/src/current_route_aware.dart';
 import 'package:cupertino_interactive_keyboard/src/height_observer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +30,10 @@ class IOSCupertinoInputAccessory extends StatefulWidget {
   State<StatefulWidget> createState() => _IOSCupertinoInputAccessory();
 }
 
-class _IOSCupertinoInputAccessory extends State<IOSCupertinoInputAccessory> {
+class _IOSCupertinoInputAccessory extends State<IOSCupertinoInputAccessory>
+    with CurrentRouteAware {
   final _viewId = _nextViewId++;
+  double? _latestHeight;
 
   @override
   void dispose() {
@@ -40,11 +43,29 @@ class _IOSCupertinoInputAccessory extends State<IOSCupertinoInputAccessory> {
   }
 
   @override
+  void didChangeRouteCurrentState() {
+    super.didChangeRouteCurrentState();
+    _reportHeight();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return HeightObserver(
-      onChange: (height) => CupertinoInteractiveKeyboardPlatform.instance
-          .setInputAccessoryHeight(_viewId, height),
+      onChange: (height) {
+        _latestHeight = height;
+        _reportHeight();
+      },
       child: widget.child,
     );
+  }
+
+  void _reportHeight() {
+    if (!isRouteCurrent) {
+      CupertinoInteractiveKeyboardPlatform.instance
+          .removeInputAccessoryHeight(_viewId);
+    } else if (_latestHeight != null) {
+      CupertinoInteractiveKeyboardPlatform.instance
+          .setInputAccessoryHeight(_viewId, _latestHeight!);
+    }
   }
 }

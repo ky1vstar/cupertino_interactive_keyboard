@@ -40,8 +40,8 @@ extension UIResponder {
       let plugin = CupertinoInteractiveKeyboardPlugin.instance(for: vc)
     {
       let inputView = plugin.inputView
-      inputView.layer.borderColor = UIColor.green.cgColor
-      inputView.layer.borderWidth = 2
+//      inputView.layer.borderColor = UIColor.green.cgColor
+//      inputView.layer.borderWidth = 2
       cachedInputAccessoryView = inputView
       return inputView
     } else {
