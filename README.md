@@ -22,7 +22,7 @@ CupertinoInteractiveKeyboard(
 );
 ```
 
-In chat-like UI where you have input bar attached to bottom, you can use the `CupertinoInputAccessory` widget.
+In chat-like UI where you have input bar attached to the bottom, you can use the `CupertinoInputAccessory` widget.
 It designed to use its child's height as native [input accessory view](https://developer.apple.com/documentation/uikit/uiresponder/1621119-inputaccessoryview) size.
 
 ```dart
