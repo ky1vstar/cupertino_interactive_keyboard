@@ -1,6 +1,7 @@
 import 'package:cupertino_interactive_keyboard_example/catalog.dart';
 import 'package:cupertino_interactive_keyboard_example/input_accessory.dart';
 import 'package:cupertino_interactive_keyboard_example/nested_navigation.dart';
+import 'package:cupertino_interactive_keyboard_example/reversed_scroll_view.dart';
 import 'package:cupertino_interactive_keyboard_example/simple_scroll_view.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
         "/simple_scroll_view": (context) => const SimpleScrollView(),
         "/input_accessory": (context) => const InputAccessory(),
         "/nested_navigation": (context) => const NestedNavigation(),
+        "/reversed_scroll_view": (context) => const ReversedScrollView(),
       },
     );
   }

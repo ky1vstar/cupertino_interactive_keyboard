@@ -1,5 +1,6 @@
 import 'package:cupertino_interactive_keyboard/src/cupertino_interactive_keyboard_platform_interface.dart';
 import 'package:cupertino_interactive_keyboard/src/current_route_aware.dart';
+import 'package:cupertino_interactive_keyboard/src/interactive_keyboard_scroll_physics.dart';
 import 'package:cupertino_interactive_keyboard/src/rect_observer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -60,12 +61,22 @@ class _IOSCupertinoInteractiveKeyboardState
 
   @override
   Widget build(BuildContext context) {
-    return RectObserver(
-      onChange: (rect) {
-        _latestRect = rect;
-        _reportRect();
-      },
-      child: widget.child,
+    final scrollBehavior = ScrollConfiguration.of(context);
+    final newScrollPhysics = const InteractiveKeyboardScrollPhysics().applyTo(
+      scrollBehavior.getScrollPhysics(context),
+    );
+    final newScrollBehavior =
+        scrollBehavior.copyWith(physics: newScrollPhysics);
+
+    return ScrollConfiguration(
+      behavior: newScrollBehavior,
+      child: RectObserver(
+        onChange: (rect) {
+          _latestRect = rect;
+          _reportRect();
+        },
+        child: widget.child,
+      ),
     );
   }
 

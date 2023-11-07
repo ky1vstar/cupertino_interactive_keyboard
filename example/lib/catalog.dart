@@ -25,6 +25,11 @@ class Catalog extends StatelessWidget {
             title: const Text("Nested Navigation"),
             onTap: () => Navigator.pushNamed(context, "/nested_navigation"),
           ),
+          const Divider(height: 1),
+          ListTile(
+            title: const Text("Reversed Scroll View"),
+            onTap: () => Navigator.pushNamed(context, "/reversed_scroll_view"),
+          ),
         ],
       ),
     );
