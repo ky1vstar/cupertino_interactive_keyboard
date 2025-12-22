@@ -27,5 +27,7 @@ jobs:
         run: |
           flutter config --enable-swift-package-manager
           flutter build ios --no-codesign
+      - name: Reset git repo
+        run: git reset --hard
       - name: Dry run publish
         run: dart pub lish --dry-run
