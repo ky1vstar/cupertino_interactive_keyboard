@@ -1,0 +1,31 @@
+name: Test and Validate
+
+on:
+  push:
+    tags-ignore: [ '**' ]
+    branches: [ '**' ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Run tests
+        run: flutter test
+      - name: Build Example app with CocoaPods
+        working-directory: example
+        run: |
+          flutter config --no-enable-swift-package-manager
+          flutter build ios --no-codesign
+      - name: Build Example app with SPM
+        working-directory: example
+        run: |
+          flutter config --enable-swift-package-manager
+          flutter build ios --no-codesign
+      - name: Dry run publish
+        run: dart pub lish --dry-run

@@ -16,6 +16,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  go_router: ^17.0.1
   lint: ^2.1.2
 
 flutter:
