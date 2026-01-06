@@ -1,6 +1,6 @@
 name: cupertino_interactive_keyboard
 description: A Flutter plugin intended to achieve native iOS interactively dismissible keyboard.
-version: 0.0.1
+version: 1.0.0
 homepage: https://github.com/ky1vstar/cupertino_interactive_keyboard
 issue_tracker: https://github.com/ky1vstar/cupertino_interactive_keyboard/issues
 
