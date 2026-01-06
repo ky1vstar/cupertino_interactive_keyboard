@@ -11,9 +11,6 @@ class NestedNavigation extends StatelessWidget {
         title: const Text("Nested Navigation"),
         actions: [
           TextButton(
-            style: TextButton.styleFrom(
-              foregroundColor: Theme.of(context).colorScheme.onPrimary,
-            ),
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(

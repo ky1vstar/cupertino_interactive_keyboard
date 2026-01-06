@@ -1,23 +1,63 @@
 import 'package:cupertino_interactive_keyboard/cupertino_interactive_keyboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class ReversedScrollView extends StatelessWidget {
+class ReversedScrollView extends StatefulWidget {
   const ReversedScrollView({super.key});
+
+  @override
+  State<ReversedScrollView> createState() => _ReversedScrollViewState();
+}
+
+class _ReversedScrollViewState extends State<ReversedScrollView> {
+  final _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Reversed Scroll View"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              if (_focusNode.hasFocus) {
+                _focusNode.unfocus();
+              } else {
+                _focusNode.requestFocus();
+              }
+            },
+            icon: ListenableBuilder(
+              listenable: _focusNode,
+              builder: (_, __) => Icon(
+                _focusNode.hasFocus ? Icons.keyboard_hide : Icons.keyboard,
+              ),
+            ),
+          ),
+        ],
       ),
       body: CupertinoInteractiveKeyboard(
-        child: ListView(
-          reverse: true,
+        child: Stack(
           children: [
-            TextFormField(
-              initialValue: _kSampleText,
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
+            Visibility.maintain(
+              visible: false,
+              child: TextField(
+                focusNode: _focusNode,
+                inputFormatters: [
+                  FilteringTextInputFormatter.deny(RegExp('.*')),
+                ],
+              ),
+            ),
+            ListView.builder(
+              reverse: true,
+              itemBuilder: (_, index) => ListTile(
+                title: Text('Item #$index'),
+              ),
             ),
           ],
         ),
@@ -25,6 +65,3 @@ class ReversedScrollView extends StatelessWidget {
     );
   }
 }
-
-const _kSampleText =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
