@@ -1,6 +1,11 @@
 import UIKit
 
+protocol CIKScrollViewDelegate: AnyObject {
+  func cikScrollView(_ scrollView: CIKScrollView, didMoveToWindow window: UIWindow?)
+}
+
 class CIKScrollView: UIScrollView, UIGestureRecognizerDelegate {
+  weak var cikDelegate: CIKScrollViewDelegate?
   var scrollabeRects = [Int: CGRect]()
   
   override init(frame: CGRect) {
@@ -23,11 +28,7 @@ class CIKScrollView: UIScrollView, UIGestureRecognizerDelegate {
   
   override func didMoveToWindow() {
     super.didMoveToWindow()
-    if window != nil {
-      KeyboardManager.shared.activeScrollViews.insert(self)
-    } else {
-      KeyboardManager.shared.activeScrollViews.remove(self)
-    }
+    cikDelegate?.cikScrollView(self, didMoveToWindow: window)
   }
   
   override func didMoveToSuperview() {

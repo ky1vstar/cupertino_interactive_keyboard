@@ -1,6 +1,12 @@
 import UIKit
 
+protocol CIKInputAccessoryViewDelegate: AnyObject {
+  func cikInputAccessoryView(_ inputAccessoryView: CIKInputAccessoryView, didMoveToWindow window: UIWindow?)
+}
+
 class CIKInputAccessoryView: UIView {
+  weak var delegate: CIKInputAccessoryViewDelegate?
+  
   var inputAccessoryHeights = [Int: Double]() {
     didSet {
       heightConstraint.constant = inputAccessoryHeights.values.max() ?? 0
@@ -30,11 +36,7 @@ class CIKInputAccessoryView: UIView {
   
   override func didMoveToWindow() {
     super.didMoveToWindow()
-    if window != nil {
-      KeyboardManager.shared.activeInputAccessoryViews.insert(self)
-    } else {
-      KeyboardManager.shared.activeInputAccessoryViews.remove(self)
-    }
+    delegate?.cikInputAccessoryView(self, didMoveToWindow: window)
   }
   
   override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
